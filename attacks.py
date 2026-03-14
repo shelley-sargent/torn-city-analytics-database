@@ -155,8 +155,10 @@ for col in full_attack_info.select_dtypes(include='number').columns:
         print(f"{col}: error")
 
 # -- Eliminate NaN/NaT values for DB import
-df = full_attack_info.replace({np.nan: None, pd.NaT: None})
-df = full_attack_info.where(full_attack_info.notnull(), None)
+df = full_attack_info.copy()
+for col in df.columns:
+    df[col] = df[col].where(pd.notna(df[col]), other=None)
+df = df.astype(object).where(pd.notna(df), other=None)
 print('Final dataframe created.')
 
 
