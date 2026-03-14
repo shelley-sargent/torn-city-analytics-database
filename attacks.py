@@ -58,21 +58,36 @@ print(f"{len(players)} unique players found.")
 # -- 2. Collect Individual Player Stats --
 # ----------------------------------------
 
-
 # -- Collect player personal stats
 personal_stats = "elo,bestdamage,revives,attackcriticalhits,boostersused,cantaken,statenhancersused,refills,networth,xantaken"
 player_personal_stats = {}
-
 '''
+
 # -- Test for stats in case of API update
 for stat in personal_stats.split(","):
     try:
-        retrieved_stat = api.get("user_personal_stats", user_id=players[10], stats=stat)
+        retrieved_stat = api.get("user_personal_stats", user_id=players[:10], stats=stat)
         print(f"Stats for {players[0]}: {stat} fetched: {retrieved_stat}")
     except Exception as e:
         print(f"Error fetching stats for {stat}: {e}")
-'''
 
+for i, player in enumerate(players[:10], start=1):
+    try:
+        player_stats = api.get("user_personal_stats", user_id=player, stats=personal_stats)
+        player_personal_stats[player] = {
+            ps["name"]: ps["value"] for ps in player_stats["personalstats"]
+        }
+        print(player_personal_stats[player])
+    except Exception as e:
+        print(f"Error fetching stats for player {player}: {e}")
+        continue
+
+    # print(f"[{i}/{len(players)}] Player {player} stats fetched.")
+    time.sleep(1)
+
+print('All stats fetched.')
+
+'''
 for i, player in enumerate(players, start=1):
     try:
         player_stats = api.get("user_personal_stats", user_id=player, stats=personal_stats)
@@ -124,6 +139,17 @@ df = full_attack_info.where(full_attack_info.notnull(), None)
 print('Final dataframe created.')
 
 # print(full_attack_info.notnull().sum().sort_values(ascending=False))
+
+bigint_cols = [
+    'attacker_attackcriticalhits', 'attacker_xantaken', 'attacker_boostersused',
+    'attacker_revives', 'attacker_cantaken', 'attacker_networth', 'attacker_bestdamage',
+    'attacker_refills', 'attacker_statenhancersused', 'defender_attackcriticalhits',
+    'defender_xantaken', 'defender_boostersused', 'defender_revives', 'defender_cantaken',
+    'defender_networth', 'defender_bestdamage', 'defender_refills', 'defender_statenhancersused'
+]
+
+for col in bigint_cols:
+    full_attack_info[col] = pd.to_numeric(full_attack_info[col], errors='coerce').astype('Int64')
 
 # -- connect to database
 def upload():
