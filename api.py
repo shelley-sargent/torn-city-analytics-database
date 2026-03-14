@@ -5,7 +5,7 @@ import requests
 import datetime
 from dotenv import load_dotenv
 
-def get(api_name, version=2, start=0, end=0, fac_id=26312, user_id=2864080, cat=all, limit=1000, war=0, stats=''):
+def get(api_name, version=2, start=0, end=0, fac_id=37786, user_id=2864080, cat=all, limit=1000, war=0, stats=''):
 
     load_dotenv()
 
@@ -25,6 +25,7 @@ def get(api_name, version=2, start=0, end=0, fac_id=26312, user_id=2864080, cat=
         "faction_attacks": f"faction/attacks?limit={limit}&sort=DESC&to={end}&from={start}", # -- returns more info for fewer attacks
         "faction_organized_crimes": f"faction/crimes?cat={cat}", # -- returns faction crime info
         "faction_ranked_war_report": f"faction/{war}/rankedwarreport", # -- returns war report for specific war #
+        "faction_contributors": f"faction/contributors?stat={stats}", # -- returns faction contributor categories
         "faction_members": f"faction/{fac_id}/members", # -- returns list of members in faction
         "user_personal_stats": f"user/{user_id}/personalstats?stat={stats}&timestamp={end}", # -- returns specific publicaly available stats
         "user": f"user?selections={stats}&id={user_id}", # -- returns basic user information

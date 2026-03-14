@@ -6,7 +6,13 @@ from psycopg2.extras import execute_values
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from get_data import full_attack_info as df
+from attacks import full_attack_info as df
+
+'''
+File set to run in cron every six hours.
+Focused on collecting data that must be updated more than once per day during high volume events
+Currently focused on collecting faction attacks data from attacks.py
+'''
 
 load_dotenv()
 

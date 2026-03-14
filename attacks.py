@@ -3,6 +3,10 @@ import pandas as pd
 import time
 import numpy as np
 
+# ------------------------------------
+# -- 1. Collect & Clean Attack Data --
+# ------------------------------------
+
 # --  Pull latest attack data from Torn API
 faction_attacks_full = api.get("faction_attacks_full")
 faction_attacks_dict = faction_attacks_full["attacks"]
@@ -46,6 +50,11 @@ players = pd.unique(faction_attacks[["attacker_id", "defender_id"]].values.ravel
 players = [p for p in players if pd.notna(p)]
 print(f"{len(players)} unique players found.")
 
+# ----------------------------------------
+# -- 2. Collect Individual Player Stats --
+# ----------------------------------------
+
+
 # -- Collect player personal stats
 personal_stats = ("elo,bestdamage,revives,attackcriticalhits,boostersused,cantaken,statenhancersused,refills,networth,xantaken")
 player_personal_stats = {}
@@ -74,6 +83,11 @@ for i, player in enumerate(players, start=1):
     time.sleep(1)
 
 print('All stats fetched.')
+
+# ---------------------------------------
+# -- 1. Merge Data & Create DataFrames --
+# ---------------------------------------
+
 
 # -- Create dataframe with player stats
 player_stats_df = pd.DataFrame.from_dict(player_personal_stats, orient="index")
