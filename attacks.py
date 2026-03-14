@@ -70,13 +70,16 @@ for i, player in enumerate(players, start=1):
         print(f"Error fetching stats for player {player}: {e}")
         continue
 
-    print(f"[{i}/{len(players)}] Player {player} stats fetched.")
+    # print(f"[{i}/{len(players)}] Player {player} stats fetched.")
     time.sleep(1)
+
+print('All stats fetched.')
 
 # -- Create dataframe with player stats
 player_stats_df = pd.DataFrame.from_dict(player_personal_stats, orient="index")
 player_stats_df.index = player_stats_df.index.astype(int)
-print(player_stats_df)
+# print(player_stats_df)
+print('Initial dataframe created.')
 
 # Join stats to faction attacks
 full_attack_info = faction_attacks.merge(
@@ -85,6 +88,7 @@ full_attack_info = faction_attacks.merge(
     right_index=True,
     how="left"
 )
+print('Attacker stats joined.')
 
 full_attack_info = full_attack_info.merge(
     player_stats_df.rename(columns=lambda c: f"defender_{c}"),
@@ -92,11 +96,13 @@ full_attack_info = full_attack_info.merge(
     right_index=True,
     how="left"
 )
+print('Defender stats joined.')
     # -- Deduplicate
 full_attack_info.drop_duplicates(subset="id", inplace=True)
 
 # -- Eliminate NaN/NaT values for DB import
 full_attack_info = full_attack_info.replace({np.nan: None, pd.NaT: None})
 full_attack_info = full_attack_info.where(full_attack_info.notnull(), None)
+print('Final dataframe created.')
 
-print(full_attack_info.notnull().sum().sort_values(ascending=False))
+# print(full_attack_info.notnull().sum().sort_values(ascending=False))
