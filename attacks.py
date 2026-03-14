@@ -133,11 +133,6 @@ print('Defender stats joined.')
     # -- Deduplicate
 full_attack_info.drop_duplicates(subset="id", inplace=True)
 
-# -- Eliminate NaN/NaT values for DB import
-df = full_attack_info.replace({np.nan: None, pd.NaT: None})
-df = full_attack_info.where(full_attack_info.notnull(), None)
-print('Final dataframe created.')
-
 # print(full_attack_info.notnull().sum().sort_values(ascending=False))
 
 bigint_cols = [
@@ -158,6 +153,14 @@ for col in full_attack_info.select_dtypes(include='number').columns:
         print(f"{col}: {max_val}")
     except:
         print(f"{col}: error")
+
+# -- Eliminate NaN/NaT values for DB import
+df = full_attack_info.replace({np.nan: None, pd.NaT: None})
+df = full_attack_info.where(full_attack_info.notnull(), None)
+print('Final dataframe created.')
+
+
+
 
 # -- connect to database
 def upload():
