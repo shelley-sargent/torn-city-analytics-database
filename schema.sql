@@ -123,10 +123,51 @@ ALTER TABLE ONLY public.player_stats_daily ALTER COLUMN id SET DEFAULT nextval('
 
 CREATE INDEX idx_psd_player_date ON public.player_stats_daily USING btree (player_id, snapshot_date DESC);
 
+-- Ranked war attacks table (all attacks during an active ranked war)
+CREATE TABLE public.ranked_war_attacks (
+    id                    text NOT NULL,
+    war_id                integer NOT NULL,
+    code                  text,
+    started               timestamp with time zone,
+    ended                 timestamp with time zone,
+    attacker_id           integer,
+    attacker_name         text,
+    attacker_level        integer,
+    attacker_faction_id   integer,
+    attacker_faction      text,
+    defender_id           integer,
+    defender_name         text,
+    defender_level        integer,
+    defender_faction_id   integer,
+    defender_faction      text,
+    result                text,
+    respect_gain          numeric,
+    respect_loss          numeric,
+    chain                 integer,
+    is_interrupted        boolean,
+    is_stealthed          boolean,
+    is_raid               boolean,
+    is_ranked_war         boolean,
+    mod_fair_fight        numeric,
+    mod_war               numeric,
+    mod_retaliation       numeric,
+    mod_group             numeric,
+    mod_overseas          numeric,
+    mod_chain             numeric,
+    mod_warlord           numeric,
+    finishing_hit_effects jsonb,
+    CONSTRAINT ranked_war_attacks_pkey PRIMARY KEY (id)
+);
+
+CREATE INDEX idx_rwa_war_id ON public.ranked_war_attacks USING btree (war_id);
+CREATE INDEX idx_rwa_attacker ON public.ranked_war_attacks USING btree (attacker_id);
+CREATE INDEX idx_rwa_defender ON public.ranked_war_attacks USING btree (defender_id);
+
 -- ========================
 -- Permissions
 -- ========================
 GRANT ALL ON TABLE public.attacks TO tornbot_user;
 GRANT ALL ON TABLE public.player_stats_daily TO tornbot_user;
 GRANT ALL ON TABLE public.players TO tornbot_user;
+GRANT ALL ON TABLE public.ranked_war_attacks TO tornbot_user;
 GRANT SELECT, USAGE ON SEQUENCE public.player_stats_daily_id_seq TO tornbot_user;

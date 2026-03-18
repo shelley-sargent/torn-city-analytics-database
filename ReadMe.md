@@ -85,6 +85,7 @@ Create the database and user in PostgreSQL, then run the schema file:
 ```bash
    0 */6 * * * /usr/bin/python3 /path/to/file/attacks.py >> /path/to/file/cron.log 2>&1
    0 * * * * /usr/bin/python3 /path/to/file/players.py >> /path/to/file/cron.log 2>&1
+   */5 * * * * /usr/bin/python3 /path/to/file/ranked_war.py >> /path/to/file/cron.log 2>&1
 ```
 
 ## Skills Demonstrated
